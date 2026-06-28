@@ -20,5 +20,10 @@ class User(TimestampMixin, Base):
     tenant_id: Mapped[UUID] = mapped_column(ForeignKey("tenants.id"), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
 
+    # Firebase Auth fields — nullable so existing seed/test users remain valid
+    firebase_uid: Mapped[str | None] = mapped_column(String, unique=True, nullable=True, index=True)
+    email: Mapped[str | None] = mapped_column(String, nullable=True)
+    display_name: Mapped[str | None] = mapped_column(String, nullable=True)
+
     tenant: Mapped[Tenant] = relationship("Tenant", back_populates="users")
     messages: Mapped[list[Message]] = relationship("Message", back_populates="user")

@@ -13,6 +13,7 @@ from fastapi import FastAPI
 
 from app.api import messages, tenants, users
 from app.api import query
+from app.auth.firebase import initialize_firebase_app
 from app.config import settings
 from app.db.init_db import init_db
 
@@ -20,6 +21,7 @@ from app.db.init_db import init_db
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL))
+    initialize_firebase_app()
     await init_db()
     yield
 

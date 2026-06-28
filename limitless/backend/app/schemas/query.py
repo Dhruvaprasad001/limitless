@@ -9,7 +9,6 @@ from app.schemas.query_plan import QueryPlan
 
 
 class QueryRequest(BaseModel):
-    tenant_id: UUID
     question: str
 
 

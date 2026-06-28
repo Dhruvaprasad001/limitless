@@ -7,8 +7,6 @@ from pydantic import BaseModel, ConfigDict
 
 
 class MessageCreate(BaseModel):
-    tenant_id: UUID
-    user_id: UUID
     content: str
     event_time: datetime | None = None
 
