@@ -41,6 +41,9 @@ class MessageService:
 
         return await self._message_repo.create(tenant_id, user_id, content, event_time=event_time)
 
+    async def list_messages(self, tenant_id: UUID, limit: int = 100) -> list[Message]:
+        return await self._message_repo.list_by_tenant(tenant_id, limit)
+
     async def get_message(self, tenant_id: UUID, message_id: UUID) -> Message:
         message = await self._message_repo.get_by_id(tenant_id, message_id)
         if message is None:

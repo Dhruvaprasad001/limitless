@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
 from app.api.dependencies import get_embedding_worker, get_extraction_worker, get_message_service
 from app.auth.dependencies import get_current_user
@@ -29,3 +29,12 @@ async def create_message(
         extraction_worker.enqueue, message.id, message.tenant_id, message.content
     )
     return message
+
+
+@router.get("/", response_model=list[MessageResponse])
+async def list_messages(
+    limit: int = Query(default=100, ge=1, le=500),
+    current_user: CurrentUser = Depends(get_current_user),
+    message_service: MessageService = Depends(get_message_service),
+) -> list[MessageResponse]:
+    return await message_service.list_messages(current_user.tenant_id, limit)
