@@ -10,6 +10,7 @@ from typing import AsyncGenerator
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import messages, tenants, users
 from app.api import query
@@ -31,6 +32,14 @@ app = FastAPI(
     description="AI-powered multi-tenant team updates with hybrid retrieval and grounded LLM answers.",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(tenants.router)

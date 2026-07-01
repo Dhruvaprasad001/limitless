@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timedelta
+from uuid import UUID
 
 from fastapi import Depends, Header
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,6 +16,23 @@ from app.repositories.user_repository import UserRepository
 
 logger = logging.getLogger(__name__)
 
+# In-process cache: firebase_uid → (CurrentUser, expires_at)
+# Avoids a DB round-trip on every request for already-known users.
+_USER_CACHE: dict[str, tuple[CurrentUser, datetime]] = {}
+_CACHE_TTL = timedelta(minutes=10)
+
+
+def _get_cached(uid: str) -> CurrentUser | None:
+    entry = _USER_CACHE.get(uid)
+    if entry and datetime.utcnow() < entry[1]:
+        return entry[0]
+    _USER_CACHE.pop(uid, None)
+    return None
+
+
+def _set_cached(uid: str, user: CurrentUser) -> None:
+    _USER_CACHE[uid] = (user, datetime.utcnow() + _CACHE_TTL)
+
 
 async def get_db_session() -> AsyncSession:
     async for session in get_session():
@@ -24,16 +43,12 @@ async def get_current_user(
     authorization: str | None = Header(None),
     session: AsyncSession = Depends(get_db_session),
 ) -> CurrentUser:
-    """
-    FastAPI dependency that:
-    1. Extracts the Bearer token from the Authorization header.
-    2. Verifies the Firebase ID token.
-    3. Looks up the user by firebase_uid.
-    4. Auto-provisions a new tenant + user on first login.
-    5. Returns a CurrentUser with id and tenant_id populated.
-    """
     token = extract_bearer_token(authorization)
     claims = verify_firebase_token(token)
+
+    cached = _get_cached(claims.uid)
+    if cached:
+        return cached
 
     user_repo = UserRepository(session)
     tenant_repo = TenantRepository(session)
@@ -41,7 +56,6 @@ async def get_current_user(
     user = await user_repo.get_by_firebase_uid(claims.uid)
 
     if user is None:
-        # First login — provision a dedicated tenant and user record
         tenant = await tenant_repo.create(name=claims.email or claims.uid)
         user = await user_repo.create_with_firebase(
             tenant_id=tenant.id,
@@ -50,28 +64,14 @@ async def get_current_user(
             email=claims.email,
             display_name=claims.name,
         )
-        logger.info(
-            "provisioned_new_user",
-            extra={
-                "uid": claims.uid,
-                "user_id": str(user.id),
-                "tenant_id": str(user.tenant_id),
-            },
-        )
+        logger.info("provisioned_new_user uid=%s user_id=%s", claims.uid, user.id)
 
-    logger.info(
-        "authenticated",
-        extra={
-            "uid": claims.uid,
-            "user_id": str(user.id),
-            "tenant_id": str(user.tenant_id),
-        },
-    )
-
-    return CurrentUser(
+    current_user = CurrentUser(
         id=user.id,
         tenant_id=user.tenant_id,
         firebase_uid=user.firebase_uid,  # type: ignore[arg-type]
         email=user.email,
         display_name=user.display_name,
     )
+    _set_cached(claims.uid, current_user)
+    return current_user
