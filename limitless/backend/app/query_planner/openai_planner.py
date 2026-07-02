@@ -6,26 +6,11 @@ import logging
 from openai import AsyncOpenAI
 
 from app.config import settings
+from app.prompts.planner import SYSTEM_PROMPT
 from app.query_planner.base import QueryPlannerBase
 from app.schemas.query_plan import QueryPlan
 
 logger = logging.getLogger(__name__)
-
-_SYSTEM_PROMPT = """\
-You are an intent parser for a team updates search system.
-Given a natural language question, extract the following and respond ONLY with valid JSON:
-
-{
-  "intent": "<one of: pending_status, status_update, person_activity, order_status, general_query>",
-  "entity": "<the primary named entity in its shortest unambiguous form — e.g. '442' for 'order #442', \
-'line 3' for 'machine line 3', 'John Smith' for a person, 'JIRA-123' for a ticket — or null if none>",
-  "time_range": "<one of: today, this_week, last_week, this_month, or null if not specified>"
-}
-
-Be conservative with time_range — only set it if the question explicitly mentions a time period.
-For entity: extract the minimal identifier, stripping structural prefixes like 'order #', 'machine ', \
-'ticket ' unless the prefix is part of the identifier itself (e.g. 'JIRA-123', 'SHP-0042').\
-"""
 
 _SAFE_DEFAULT = QueryPlan(intent="general_query", entity=None, time_range=None, confident=True)
 
@@ -40,7 +25,7 @@ class OpenAIPlanner(QueryPlannerBase):
             response = await self._client.chat.completions.create(
                 model=self._model,
                 messages=[
-                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": question},
                 ],
                 response_format={"type": "json_object"},

@@ -9,32 +9,10 @@ from openai import AsyncOpenAI
 from app.config import settings
 from app.extraction.base import EntityExtractorBase
 from app.models.entity import Entity
+from app.prompts.extractor import SYSTEM_PROMPT
 from app.repositories.entity_repository import EntityRepository
 
 logger = logging.getLogger(__name__)
-
-_SYSTEM_PROMPT = """\
-You are an entity extractor for a team communication platform.
-
-Extract all named entities from the message that are important for search and retrieval.
-Respond ONLY with valid JSON:
-
-{
-  "entities": [
-    {"type": "<category e.g. order, machine, person, product, ticket, location>", "value": "<canonical value>"}
-  ]
-}
-
-Rules:
-- Extract anything specific and nameable: order IDs, machine names, people names, product names, \
-ticket numbers, shipment IDs, locations, SKUs — whatever is relevant to the domain.
-- For "value": use the shortest unambiguous form of the identifier.
-  Examples: "order #442" → "442", "machine line 3" → "line 3", "John Smith" → "John Smith", \
-"ticket JIRA-123" → "JIRA-123", "shipment SHP-0042" → "SHP-0042".
-- Do not extract generic words like "team", "system", "update", "issue", "status".
-- If nothing specific and nameable is present, return {"entities": []}.\
-"""
-
 
 class OpenAIEntityExtractor(EntityExtractorBase):
     def __init__(
@@ -52,7 +30,7 @@ class OpenAIEntityExtractor(EntityExtractorBase):
             response = await self._client.chat.completions.create(
                 model=self._model,
                 messages=[
-                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": content},
                 ],
                 response_format={"type": "json_object"},
