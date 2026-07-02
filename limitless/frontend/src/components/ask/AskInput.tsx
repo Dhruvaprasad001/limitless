@@ -17,6 +17,7 @@ export function AskInput({ onSubmit, isLoading }: AskInputProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<QueryRequestFormValues>({
     resolver: zodResolver(queryRequestSchema),
@@ -26,6 +27,10 @@ export function AskInput({ onSubmit, isLoading }: AskInputProps) {
 
   function onValid(values: QueryRequestFormValues) {
     onSubmit(values.question);
+    reset();
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
