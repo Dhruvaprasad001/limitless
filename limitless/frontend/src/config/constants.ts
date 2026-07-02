@@ -9,4 +9,4 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const APP_NAME = "Limitless";
-export const DEFAULT_MESSAGES_LIMIT = 100;
+export const DEFAULT_MESSAGES_LIMIT = 20;

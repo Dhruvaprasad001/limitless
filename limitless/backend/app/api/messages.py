@@ -33,8 +33,9 @@ async def create_message(
 
 @router.get("/", response_model=list[MessageResponse])
 async def list_messages(
-    limit: int = Query(default=100, ge=1, le=500),
+    limit: int = Query(default=20, ge=1, le=100),
+    page: int = Query(default=1, ge=1),
     current_user: CurrentUser = Depends(get_current_user),
     message_service: MessageService = Depends(get_message_service),
 ) -> list[MessageResponse]:
-    return await message_service.list_messages(current_user.tenant_id, limit)
+    return await message_service.list_messages(current_user.tenant_id, limit, page)

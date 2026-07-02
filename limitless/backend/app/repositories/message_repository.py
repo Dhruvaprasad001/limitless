@@ -49,13 +49,17 @@ class MessageRepository(BaseRepository):
         )
         return list(result.scalars().all())
 
-    async def list_by_tenant(self, tenant_id: UUID, limit: int = 100) -> list[Message]:
+    async def list_by_tenant(
+        self, tenant_id: UUID, limit: int = 20, page: int = 1
+    ) -> list[Message]:
         self._require_tenant(tenant_id)
+        offset = (page - 1) * limit
         result = await self.session.execute(
             select(Message)
             .where(Message.tenant_id == tenant_id)
             .order_by(Message.event_time.desc())
             .limit(limit)
+            .offset(offset)
         )
         return list(result.scalars().all())
 

@@ -13,9 +13,12 @@ export class MessageService {
     return response.data;
   }
 
-  async getMessages(limit: number = DEFAULT_MESSAGES_LIMIT): Promise<MessageResponse[]> {
+  async getMessages(
+    limit: number = DEFAULT_MESSAGES_LIMIT,
+    page: number = 1
+  ): Promise<MessageResponse[]> {
     const response = await this.client.get<MessageResponse[]>(API_ENDPOINTS.messages, {
-      params: { limit },
+      params: { limit, page },
     });
     return response.data;
   }

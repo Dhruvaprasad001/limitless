@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, MessageSquare } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { MessageCard } from "@/components/messages/MessageCard";
@@ -11,8 +11,33 @@ import { useMessages } from "@/hooks/useMessages";
 import { cn } from "@/utils/cn";
 
 export default function MessagesPage() {
-  const { data: messages, isLoading, error } = useMessages();
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMessages();
   const [addOpen, setAddOpen] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const messages = data?.pages.flat() ?? [];
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <AppShell>
@@ -23,7 +48,9 @@ export default function MessagesPage() {
               Team Updates
             </h2>
             <p className="mt-0.5 text-sm text-neutral-500">
-              {messages ? `${messages.length} message${messages.length !== 1 ? "s" : ""}` : ""}
+              {messages.length > 0
+                ? `${messages.length} message${messages.length !== 1 ? "s" : ""}`
+                : ""}
             </p>
           </div>
         </div>
@@ -44,7 +71,7 @@ export default function MessagesPage() {
           </p>
         )}
 
-        {!isLoading && !error && messages?.length === 0 && (
+        {!isLoading && !error && messages.length === 0 && (
           <EmptyState
             icon={<MessageSquare className="h-5 w-5" />}
             title="No updates yet"
@@ -60,10 +87,23 @@ export default function MessagesPage() {
           />
         )}
 
-        {!isLoading && messages && messages.length > 0 && (
+        {messages.length > 0 && (
           <div className="space-y-3">
             {messages.map((msg) => (
               <MessageCard key={msg.id} message={msg} />
+            ))}
+          </div>
+        )}
+
+        {/* Infinite scroll sentinel */}
+        <div ref={sentinelRef} />
+
+        {isFetchingNextPage && (
+          <div className="space-y-3">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="rounded-xl border border-neutral-200 bg-white p-4">
+                <LoadingSkeleton lines={3} />
+              </div>
             ))}
           </div>
         )}
