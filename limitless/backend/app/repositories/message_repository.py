@@ -63,6 +63,13 @@ class MessageRepository(BaseRepository):
         )
         return list(result.scalars().all())
 
+    async def count_by_tenant(self, tenant_id: UUID) -> int:
+        self._require_tenant(tenant_id)
+        result = await self.session.execute(
+            select(func.count()).where(Message.tenant_id == tenant_id)
+        )
+        return result.scalar_one()
+
     async def lexical_search(
         self,
         tenant_id: UUID,

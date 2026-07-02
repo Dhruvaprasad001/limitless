@@ -22,7 +22,7 @@ export default function MessagesPage() {
   const [addOpen, setAddOpen] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  const messages = data?.pages.flat() ?? [];
+  const messages = data?.pages.flatMap((p) => p.items) ?? [];
 
   useEffect(() => {
     const el = sentinelRef.current;

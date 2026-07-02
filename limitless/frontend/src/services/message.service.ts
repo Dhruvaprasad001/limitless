@@ -1,6 +1,6 @@
 import type { AxiosInstance } from "axios";
 import { API_ENDPOINTS, DEFAULT_MESSAGES_LIMIT } from "@/config/constants";
-import type { MessageCreate, MessageResponse } from "@/types/message";
+import type { MessageCreate, MessageListResponse, MessageResponse } from "@/types/message";
 
 export class MessageService {
   constructor(private readonly client: AxiosInstance) {}
@@ -16,8 +16,8 @@ export class MessageService {
   async getMessages(
     limit: number = DEFAULT_MESSAGES_LIMIT,
     page: number = 1
-  ): Promise<MessageResponse[]> {
-    const response = await this.client.get<MessageResponse[]>(API_ENDPOINTS.messages, {
+  ): Promise<MessageListResponse> {
+    const response = await this.client.get<MessageListResponse>(API_ENDPOINTS.messages, {
       params: { limit, page },
     });
     return response.data;

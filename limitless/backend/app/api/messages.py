@@ -5,7 +5,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Query
 from app.api.dependencies import get_embedding_worker, get_extraction_worker, get_message_service
 from app.auth.dependencies import get_current_user
 from app.auth.schemas import CurrentUser
-from app.schemas.message import MessageCreate, MessageResponse
+from app.schemas.message import MessageCreate, MessageListResponse, MessageResponse
 from app.services.message_service import MessageService
 from app.workers.embedding_worker import InProcessEmbeddingWorker, InProcessExtractionWorker
 
@@ -31,11 +31,11 @@ async def create_message(
     return message
 
 
-@router.get("/", response_model=list[MessageResponse])
+@router.get("/", response_model=MessageListResponse)
 async def list_messages(
     limit: int = Query(default=20, ge=1, le=100),
     page: int = Query(default=1, ge=1),
     current_user: CurrentUser = Depends(get_current_user),
     message_service: MessageService = Depends(get_message_service),
-) -> list[MessageResponse]:
+) -> MessageListResponse:
     return await message_service.list_messages(current_user.tenant_id, limit, page)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime
 from uuid import UUID
 
@@ -9,6 +10,7 @@ from app.models.message import Message
 from app.repositories.message_repository import MessageRepository
 from app.repositories.tenant_repository import TenantRepository
 from app.repositories.user_repository import UserRepository
+from app.schemas.message import MessageListResponse
 
 
 class MessageService:
@@ -43,8 +45,12 @@ class MessageService:
 
     async def list_messages(
         self, tenant_id: UUID, limit: int = 20, page: int = 1
-    ) -> list[Message]:
-        return await self._message_repo.list_by_tenant(tenant_id, limit, page)
+    ) -> MessageListResponse:
+        total, items = await asyncio.gather(
+            self._message_repo.count_by_tenant(tenant_id),
+            self._message_repo.list_by_tenant(tenant_id, limit, page),
+        )
+        return MessageListResponse(total=total, page=page, limit=limit, items=items)
 
     async def get_message(self, tenant_id: UUID, message_id: UUID) -> Message:
         message = await self._message_repo.get_by_id(tenant_id, message_id)

@@ -11,3 +11,10 @@ export interface MessageResponse {
   event_time: string;
   ingested_at: string;
 }
+
+export interface MessageListResponse {
+  total: number;
+  page: number;
+  limit: number;
+  items: MessageResponse[];
+}

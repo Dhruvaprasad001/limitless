@@ -20,3 +20,10 @@ class MessageResponse(BaseModel):
     ingested_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class MessageListResponse(BaseModel):
+    total: int
+    page: int
+    limit: int
+    items: list[MessageResponse]

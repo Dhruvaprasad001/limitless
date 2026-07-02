@@ -21,12 +21,13 @@ export function useDashboard() {
     enabled: !loading && !!user,
   });
 
-  const messages = messagesQuery.data ?? [];
+  const messages = messagesQuery.data?.items ?? [];
+  const total = messagesQuery.data?.total ?? messages.length;
   const recentMessages = messages.slice(0, 5);
 
   return {
     workspaceName: user?.displayName ?? "My Workspace",
-    totalMessages: messages.length,
+    totalMessages: total,
     teamMembers: usersQuery.data?.length ?? 0,
     recentMessages,
     isLoading: messagesQuery.isLoading || usersQuery.isLoading,

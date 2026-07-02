@@ -9,7 +9,7 @@ import {
 import { QUERY_KEYS, DEFAULT_MESSAGES_LIMIT } from "@/config/constants";
 import { messageService } from "@/services/message.service";
 import { useAuth } from "@/hooks/useAuth";
-import type { MessageCreate, MessageResponse } from "@/types/message";
+import type { MessageCreate, MessageListResponse, MessageResponse } from "@/types/message";
 
 export function useMessages() {
   const { user, loading } = useAuth();
@@ -18,8 +18,10 @@ export function useMessages() {
     queryFn: ({ pageParam = 1 }) =>
       messageService.getMessages(DEFAULT_MESSAGES_LIMIT, pageParam as number),
     initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.length === DEFAULT_MESSAGES_LIMIT ? allPages.length + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => {
+      const fetched = allPages.reduce((sum, p) => sum + p.items.length, 0);
+      return fetched < lastPage.total ? allPages.length + 1 : undefined;
+    },
     enabled: !loading && !!user,
   });
 }
@@ -30,8 +32,8 @@ export function useCreateMessage() {
     mutationFn: (data: MessageCreate) => messageService.createMessage(data),
     onMutate: async (newMessage) => {
       await qc.cancelQueries({ queryKey: QUERY_KEYS.messages });
-      const previous = qc.getQueryData<InfiniteData<MessageResponse[]>>(QUERY_KEYS.messages);
-      qc.setQueryData<InfiniteData<MessageResponse[]>>(QUERY_KEYS.messages, (old) => {
+      const previous = qc.getQueryData<InfiniteData<MessageListResponse>>(QUERY_KEYS.messages);
+      qc.setQueryData<InfiniteData<MessageListResponse>>(QUERY_KEYS.messages, (old) => {
         if (!old) return old;
         const optimistic: MessageResponse = {
           id: `optimistic-${Date.now()}`,
@@ -41,9 +43,13 @@ export function useCreateMessage() {
           event_time: newMessage.event_time ?? new Date().toISOString(),
           ingested_at: new Date().toISOString(),
         };
+        const [firstPage, ...rest] = old.pages;
         return {
           ...old,
-          pages: [[optimistic, ...old.pages[0]], ...old.pages.slice(1)],
+          pages: [
+            { ...firstPage, total: firstPage.total + 1, items: [optimistic, ...firstPage.items] },
+            ...rest,
+          ],
         };
       });
       return { previous };
