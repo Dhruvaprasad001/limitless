@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import { InvitesApi, Configuration } from "../../client";
+import { InvitesApi, Configuration } from "@client";
 import { env } from "@/config/env";
 
 const api = new InvitesApi(

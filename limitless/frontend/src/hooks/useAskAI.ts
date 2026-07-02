@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { queryService } from "@/services/query.service";
-import type { QueryResponse } from "../../client";
+import type { QueryResponse } from "@client";
 
 export function useAskAI() {
   const mutation = useMutation<QueryResponse, Error, string>({

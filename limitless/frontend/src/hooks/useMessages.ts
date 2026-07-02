@@ -9,7 +9,7 @@ import {
 import { QUERY_KEYS, DEFAULT_MESSAGES_LIMIT } from "@/config/constants";
 import { messageService } from "@/services/message.service";
 import { useAuth } from "@/hooks/useAuth";
-import type { MessageListResponse, MessageResponse } from "../../client";
+import type { MessageListResponse, MessageResponse } from "@client";
 
 export function useMessages() {
   const { user, loading } = useAuth();
