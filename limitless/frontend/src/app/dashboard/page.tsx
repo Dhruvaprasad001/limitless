@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Building2, User2, MessageSquare, Users, Plus, Sparkles } from "lucide-react";
+import { MessageSquare, Users, Plus, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
-import { DashboardCard } from "@/components/dashboard/DashboardCard";
 import { CardSkeleton } from "@/components/common/LoadingSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import { ROUTES } from "@/config/routes";
@@ -12,47 +11,64 @@ import { AddMessageDialog } from "@/components/messages/AddMessageDialog";
 import { cn } from "@/utils/cn";
 
 export default function DashboardPage() {
-  const { workspaceName, loggedInUser, totalMessages, teamMembers, isLoading } =
-    useDashboard();
+  const { workspaceName, totalMessages, teamMembers, isLoading } = useDashboard();
   const router = useRouter();
   const [addOpen, setAddOpen] = useState(false);
 
-  const stats = [
-    { label: "Workspace", value: workspaceName, icon: <Building2 className="h-5 w-5" /> },
-    { label: "Logged In As", value: loggedInUser, icon: <User2 className="h-5 w-5" /> },
-    {
-      label: "Total Messages",
-      value: totalMessages,
-      icon: <MessageSquare className="h-5 w-5" />,
-    },
-    { label: "Team Members", value: teamMembers, icon: <Users className="h-5 w-5" /> },
-  ];
-
   return (
     <AppShell>
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-base font-semibold text-neutral-950 tracking-tight">Overview</h2>
-          <p className="mt-0.5 text-sm text-neutral-500">Your workspace at a glance.</p>
+      <div className="space-y-10">
+
+        {/* Workspace hero */}
+        <div className="rounded-2xl border border-neutral-200 bg-white px-8 py-7">
+          {isLoading ? (
+            <div className="space-y-2">
+              <div className="h-3 w-24 animate-pulse rounded bg-neutral-100" />
+              <div className="h-7 w-64 animate-pulse rounded bg-neutral-100" />
+            </div>
+          ) : (
+            <>
+              <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
+                Workspace
+              </p>
+              <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-neutral-950 break-words">
+                {workspaceName}
+              </h2>
+            </>
+          )}
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)
-            : stats.map((s) => (
-                <DashboardCard
-                  key={s.label}
-                  label={s.label}
-                  value={s.value}
-                  icon={s.icon}
+        {/* Stats */}
+        <div>
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+            At a glance
+          </h3>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {isLoading ? (
+              <>
+                <CardSkeleton />
+                <CardSkeleton />
+              </>
+            ) : (
+              <>
+                <StatCard
+                  icon={<MessageSquare className="h-5 w-5" />}
+                  label="Total Messages"
+                  value={totalMessages}
                 />
-              ))}
+                <StatCard
+                  icon={<Users className="h-5 w-5" />}
+                  label="Team Members"
+                  value={teamMembers}
+                />
+              </>
+            )}
+          </div>
         </div>
 
         {/* Quick actions */}
         <div>
-          <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-neutral-400">
             Quick Actions
           </h3>
           <div className="flex flex-wrap gap-3">
@@ -82,5 +98,27 @@ export default function DashboardPage() {
 
       <AddMessageDialog open={addOpen} onOpenChange={setAddOpen} />
     </AppShell>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+}) {
+  return (
+    <div className="flex items-center gap-5 rounded-2xl border border-neutral-200 bg-white p-6">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral-950 text-white">
+        {icon}
+      </div>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">{label}</p>
+        <p className="mt-1 text-3xl font-bold tracking-tight text-neutral-950">{value}</p>
+      </div>
+    </div>
   );
 }

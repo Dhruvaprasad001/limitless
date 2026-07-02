@@ -2,12 +2,14 @@ export const QUERY_KEYS = {
   messages: ["messages"] as const,
   dashboard: ["dashboard"] as const,
   users: ["users"] as const,
+  tenant: ["tenant"] as const,
 } as const;
 
 export const API_ENDPOINTS = {
   messages: "/messages/",
   query: "/query/",
   users: "/users/",
+  tenant: "/tenants/me",
 } as const;
 
 export const APP_NAME = "Limitless";
