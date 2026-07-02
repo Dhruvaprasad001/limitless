@@ -84,7 +84,7 @@ async def verified_tenant(
     return tenant_id
 
 
-async def get_query_service(session: AsyncSession = Depends(get_db)) -> "QueryService":
+async def get_query_service(session: AsyncSession = Depends(get_db)) -> AsyncGenerator["QueryService", None]:
     from app.query_planner.deterministic_planner import DeterministicPlanner
     from app.query_planner.fallback_planner import FallbackPlanner
     from app.query_planner.openai_planner import OpenAIPlanner
@@ -95,31 +95,36 @@ async def get_query_service(session: AsyncSession = Depends(get_db)) -> "QuerySe
     from app.llm.openai_provider import OpenAIProvider
     from app.llm.prompt_builder import PromptBuilder
     from app.services.query_service import QueryService
+    from app.db.session import AsyncSessionLocal
 
     client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
-    message_repo = MessageRepository(session)
-    embedding_repo = EmbeddingRepository(session)
-    entity_repo = EntityRepository(session)
-    user_repo = UserRepository(session)
+    # lexical and semantic searches run concurrently via asyncio.gather, so
+    # they each need their own session — a single async session cannot handle
+    # two concurrent operations at the same time.
+    async with AsyncSessionLocal() as lexical_session, AsyncSessionLocal() as semantic_session:
+        message_repo = MessageRepository(lexical_session)
+        embedding_repo = EmbeddingRepository(semantic_session)
+        entity_repo = EntityRepository(session)
+        user_repo = UserRepository(session)
 
-    deterministic = DeterministicPlanner(entity_repo)
-    llm_planner = OpenAIPlanner(client=client)
-    planner = FallbackPlanner(deterministic, llm_planner)
+        deterministic = DeterministicPlanner(entity_repo)
+        llm_planner = OpenAIPlanner(client=client)
+        planner = FallbackPlanner(deterministic, llm_planner)
 
-    lexical = LexicalRetriever(message_repo)
-    semantic = SemanticRetriever(embedding_repo, client)
-    ranker = ReciprocalRankFusion()
-    retriever = HybridRetriever(lexical, semantic, entity_repo, ranker)
+        lexical = LexicalRetriever(message_repo)
+        semantic = SemanticRetriever(embedding_repo, client)
+        ranker = ReciprocalRankFusion()
+        retriever = HybridRetriever(lexical, semantic, entity_repo, ranker)
 
-    llm_provider = OpenAIProvider(client=client)
-    prompt_builder = PromptBuilder()
+        llm_provider = OpenAIProvider(client=client)
+        prompt_builder = PromptBuilder()
 
-    return QueryService(
-        query_planner=planner,
-        retriever=retriever,
-        message_repo=message_repo,
-        user_repo=user_repo,
-        llm_provider=llm_provider,
-        prompt_builder=prompt_builder,
-    )
+        yield QueryService(
+            query_planner=planner,
+            retriever=retriever,
+            message_repo=message_repo,
+            user_repo=user_repo,
+            llm_provider=llm_provider,
+            prompt_builder=prompt_builder,
+        )

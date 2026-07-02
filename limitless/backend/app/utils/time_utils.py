@@ -4,10 +4,14 @@ from datetime import datetime, timedelta, timezone
 
 
 def resolve_time_range(time_range: str | None) -> tuple[datetime, datetime] | None:
-    """Convert a time_range string into an inclusive (start, end) UTC datetime pair."""
+    """Convert a time_range string into an inclusive (start, end) UTC datetime pair.
+
+    Returns naive datetimes (no tzinfo) to match the TIMESTAMP WITHOUT TIME ZONE
+    columns in the database.
+    """
     if not time_range:
         return None
-    now = datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     if time_range == "today":
