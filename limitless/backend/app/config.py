@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     RETRIEVAL_CONFIDENCE_THRESHOLD: float = 0.01  # minimum average RRF score to proceed
     LOG_LEVEL: str = "INFO"
 
+    # Comma-separated list of allowed CORS origins
+    ALLOWED_ORIGINS: str = "http://localhost:3000"
+
     # Firebase credentials — provide exactly one of these two
     FIREBASE_CREDENTIALS_JSON: str | None = None   # full JSON string of service account
     FIREBASE_CREDENTIALS_PATH: str | None = None   # path to serviceAccountKey.json file
