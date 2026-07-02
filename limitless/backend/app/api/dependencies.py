@@ -68,10 +68,11 @@ async def get_embedding_worker(
 async def get_extraction_worker(
     session: AsyncSession = Depends(get_db),
 ) -> InProcessExtractionWorker:
-    from app.extraction.regex_extractor import RegexEntityExtractor
+    from app.extraction.openai_extractor import OpenAIEntityExtractor
 
     entity_repo = EntityRepository(session)
-    extractor = RegexEntityExtractor(entity_repo)
+    client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+    extractor = OpenAIEntityExtractor(entity_repo, client)
     return InProcessExtractionWorker(extractor)
 
 
@@ -108,7 +109,7 @@ async def get_query_service(session: AsyncSession = Depends(get_db)) -> AsyncGen
         entity_repo = EntityRepository(session)
         user_repo = UserRepository(session)
 
-        deterministic = DeterministicPlanner(entity_repo)
+        deterministic = DeterministicPlanner()
         llm_planner = OpenAIPlanner(client=client)
         planner = FallbackPlanner(deterministic, llm_planner)
 
