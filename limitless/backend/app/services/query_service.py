@@ -76,6 +76,22 @@ class QueryService:
                 query_plan=query_plan.model_dump(),
             )
 
+        # 3b. Drop results whose individual score falls below the per-result threshold.
+        # This prevents weakly related messages from being passed to the LLM as sources.
+        top_score = scored_results[0].score if scored_results else 0.0
+        score_cutoff = max(settings.RETRIEVAL_SCORE_THRESHOLD, top_score * 0.5)
+        scored_results = [r for r in scored_results if r.score >= score_cutoff]
+
+        if not scored_results:
+            return QueryResponse(
+                answer="I don't have enough information in the retrieved messages to answer this question.",
+                supporting_message_ids=[],
+                supporting_timestamps=[],
+                supporting_user_names=[],
+                supporting_messages=[],
+                query_plan=query_plan.model_dump(),
+            )
+
         message_ids = [r.message_id for r in scored_results]
 
         # 4. Fetch full message rows (tenant-scoped)
