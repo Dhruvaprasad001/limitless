@@ -61,6 +61,7 @@ export function useCreateMessage() {
     },
     onSettled: () => {
       qc.invalidateQueries({ queryKey: QUERY_KEYS.messages });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.dashboard });
     },
   });
 }
