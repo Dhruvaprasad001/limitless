@@ -1,17 +1,15 @@
+import { Sparkles } from "lucide-react";
+
 interface AnswerCardProps {
   answer: string;
 }
 
 export function AnswerCard({ answer }: AnswerCardProps) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-      <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-950 text-xs text-white font-bold">
-          AI
-        </div>
-        <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-          Answer
-        </span>
+    <div className="rounded-2xl rounded-tl-sm border border-neutral-200 bg-white p-4">
+      <div className="mb-2.5 flex items-center gap-1.5">
+        <Sparkles className="h-3.5 w-3.5 text-neutral-400" />
+        <span className="text-xs font-medium text-neutral-400">AI</span>
       </div>
       <p className="text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap">{answer}</p>
     </div>

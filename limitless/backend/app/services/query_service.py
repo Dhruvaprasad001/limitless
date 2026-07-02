@@ -72,6 +72,7 @@ class QueryService:
                 supporting_message_ids=[],
                 supporting_timestamps=[],
                 supporting_user_names=[],
+                supporting_messages=[],
                 query_plan=query_plan.model_dump(),
             )
 
@@ -106,6 +107,7 @@ class QueryService:
                 supporting_message_ids=[],
                 supporting_timestamps=[],
                 supporting_user_names=[],
+                supporting_messages=[],
                 query_plan=query_plan.model_dump(),
             )
 
@@ -135,5 +137,6 @@ class QueryService:
             supporting_message_ids=[m.id for m in retrieved],
             supporting_timestamps=[m.created_at for m in retrieved],
             supporting_user_names=[m.user_name for m in retrieved],
+            supporting_messages=[m.content for m in retrieved],
             query_plan=query_plan.model_dump(),
         )

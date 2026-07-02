@@ -14,5 +14,6 @@ export interface QueryResponse {
   supporting_message_ids: string[];
   supporting_timestamps: string[];
   supporting_user_names: string[];
+  supporting_messages: string[];
   query_plan: QueryPlan;
 }
