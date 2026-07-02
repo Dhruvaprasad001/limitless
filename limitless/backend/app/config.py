@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "text-embedding-3-small"
     RETRIEVAL_TOP_K: int = 10
     RETRIEVAL_CONFIDENCE_THRESHOLD: float = 0.01  # minimum average RRF score to proceed
+    RETRIEVAL_SCORE_THRESHOLD: float = 0.012  # per-result minimum RRF score; drops weak matches
     LOG_LEVEL: str = "INFO"
 
     # Comma-separated list of allowed CORS origins
