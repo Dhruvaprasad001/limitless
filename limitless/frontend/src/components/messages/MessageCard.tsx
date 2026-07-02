@@ -20,12 +20,12 @@ export function MessageCard({ message, className }: MessageCardProps) {
       )}
     >
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
-        {initials(message.user_id.slice(0, 8))}
+        {initials(message.user_name)}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-xs font-medium text-neutral-500">
-            {message.user_id.slice(0, 8)}…
+            {message.user_name}
           </p>
           <time
             className="shrink-0 text-xs text-neutral-400"

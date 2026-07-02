@@ -4,6 +4,7 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import func, select
+from sqlalchemy.orm import selectinload
 
 from app.models.message import Message
 from app.repositories.base import BaseRepository
@@ -57,6 +58,7 @@ class MessageRepository(BaseRepository):
         result = await self.session.execute(
             select(Message)
             .where(Message.tenant_id == tenant_id)
+            .options(selectinload(Message.user))
             .order_by(Message.event_time.desc())
             .limit(limit)
             .offset(offset)

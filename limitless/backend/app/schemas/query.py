@@ -23,4 +23,5 @@ class QueryResponse(BaseModel):
     answer: str
     supporting_message_ids: list[UUID]
     supporting_timestamps: list[datetime]
+    supporting_user_names: list[str]
     query_plan: dict  # serialized QueryPlan

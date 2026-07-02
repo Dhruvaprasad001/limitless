@@ -15,6 +15,7 @@ class MessageResponse(BaseModel):
     id: UUID
     tenant_id: UUID
     user_id: UUID
+    user_name: str
     content: str
     event_time: datetime
     ingested_at: datetime

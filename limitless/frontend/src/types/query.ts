@@ -13,5 +13,6 @@ export interface QueryResponse {
   answer: string;
   supporting_message_ids: string[];
   supporting_timestamps: string[];
+  supporting_user_names: string[];
   query_plan: QueryPlan;
 }

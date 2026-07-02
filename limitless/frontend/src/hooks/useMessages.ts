@@ -39,6 +39,7 @@ export function useCreateMessage() {
           id: `optimistic-${Date.now()}`,
           tenant_id: "",
           user_id: "",
+          user_name: "You",
           content: newMessage.content,
           event_time: newMessage.event_time ?? new Date().toISOString(),
           ingested_at: new Date().toISOString(),

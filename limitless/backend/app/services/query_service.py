@@ -71,6 +71,7 @@ class QueryService:
                 answer="I don't have enough information in the retrieved messages to answer this question.",
                 supporting_message_ids=[],
                 supporting_timestamps=[],
+                supporting_user_names=[],
                 query_plan=query_plan.model_dump(),
             )
 
@@ -104,6 +105,7 @@ class QueryService:
                 answer="I don't have enough information in the retrieved messages to answer this question.",
                 supporting_message_ids=[],
                 supporting_timestamps=[],
+                supporting_user_names=[],
                 query_plan=query_plan.model_dump(),
             )
 
@@ -132,5 +134,6 @@ class QueryService:
             answer=answer,
             supporting_message_ids=[m.id for m in retrieved],
             supporting_timestamps=[m.created_at for m in retrieved],
+            supporting_user_names=[m.user_name for m in retrieved],
             query_plan=query_plan.model_dump(),
         )

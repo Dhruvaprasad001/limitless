@@ -63,7 +63,7 @@ export default function AskPage() {
                   {result.supporting_message_ids.map((id, i) => (
                     <EvidenceCard
                       key={id}
-                      messageId={id}
+                      userName={result.supporting_user_names[i] ?? "Unknown"}
                       timestamp={result.supporting_timestamps[i] ?? new Date().toISOString()}
                       index={i}
                     />

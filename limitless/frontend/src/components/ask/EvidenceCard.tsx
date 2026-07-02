@@ -1,14 +1,15 @@
 import { formatDateTime } from "@/utils/date";
+import { initials } from "@/utils/format";
 import { cn } from "@/utils/cn";
 
 interface EvidenceCardProps {
-  messageId: string;
+  userName: string;
   timestamp: string;
   index: number;
   className?: string;
 }
 
-export function EvidenceCard({ messageId, timestamp, index, className }: EvidenceCardProps) {
+export function EvidenceCard({ userName, timestamp, index, className }: EvidenceCardProps) {
   return (
     <div
       className={cn(
@@ -20,11 +21,12 @@ export function EvidenceCard({ messageId, timestamp, index, className }: Evidenc
         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-xs font-bold text-white">
           {index + 1}
         </span>
-        <div className="min-w-0">
-          <p className="truncate font-mono text-xs text-neutral-500" title={messageId}>
-            {messageId}
-          </p>
-          <time className="text-xs text-neutral-400">{formatDateTime(timestamp)}</time>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-xs font-semibold text-neutral-700">
+            {initials(userName)}
+          </div>
+          <p className="truncate text-xs font-medium text-neutral-700">{userName}</p>
+          <time className="shrink-0 text-xs text-neutral-400">{formatDateTime(timestamp)}</time>
         </div>
       </div>
     </div>
