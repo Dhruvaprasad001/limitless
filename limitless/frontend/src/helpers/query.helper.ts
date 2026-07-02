@@ -1,4 +1,4 @@
-import type { QueryResponse } from "@/types/query";
+import type { QueryResponse } from "../../client";
 
 export function hasSupportingEvidence(result: QueryResponse): boolean {
   return result.supporting_message_ids.length > 0;

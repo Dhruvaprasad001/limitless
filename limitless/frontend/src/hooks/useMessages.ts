@@ -9,7 +9,7 @@ import {
 import { QUERY_KEYS, DEFAULT_MESSAGES_LIMIT } from "@/config/constants";
 import { messageService } from "@/services/message.service";
 import { useAuth } from "@/hooks/useAuth";
-import type { MessageCreate, MessageListResponse, MessageResponse } from "@/types/message";
+import type { MessageListResponse, MessageResponse } from "../../client";
 
 export function useMessages() {
   const { user, loading } = useAuth();
@@ -29,7 +29,8 @@ export function useMessages() {
 export function useCreateMessage() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: MessageCreate) => messageService.createMessage(data),
+    mutationFn: (data: { content: string; event_time?: string | null }) =>
+      messageService.createMessage(data.content, data.event_time),
     onMutate: async (newMessage) => {
       await qc.cancelQueries({ queryKey: QUERY_KEYS.messages });
       const previous = qc.getQueryData<InfiniteData<MessageListResponse>>(QUERY_KEYS.messages);

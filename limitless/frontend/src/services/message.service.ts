@@ -1,28 +1,23 @@
-import type { AxiosInstance } from "axios";
-import { API_ENDPOINTS, DEFAULT_MESSAGES_LIMIT } from "@/config/constants";
-import type { MessageCreate, MessageListResponse, MessageResponse } from "@/types/message";
-
-export class MessageService {
-  constructor(private readonly client: AxiosInstance) {}
-
-  async createMessage(data: MessageCreate): Promise<MessageResponse> {
-    const response = await this.client.post<MessageResponse>(
-      API_ENDPOINTS.messages,
-      data
-    );
-    return response.data;
-  }
-
-  async getMessages(
-    limit: number = DEFAULT_MESSAGES_LIMIT,
-    page: number = 1
-  ): Promise<MessageListResponse> {
-    const response = await this.client.get<MessageListResponse>(API_ENDPOINTS.messages, {
-      params: { limit, page },
-    });
-    return response.data;
-  }
-}
-
 import apiClient from "@/lib/axios";
-export const messageService = new MessageService(apiClient);
+import { MessagesApi, Configuration } from "../../client";
+import { env } from "@/config/env";
+
+const api = new MessagesApi(
+  new Configuration({ basePath: env.apiBaseUrl }),
+  env.apiBaseUrl,
+  apiClient
+);
+
+export const messageService = {
+  async createMessage(content: string, event_time?: string | null) {
+    const { data } = await api.createMessageMessagesPost({
+      messageCreate: { content, event_time },
+    });
+    return data;
+  },
+
+  async getMessages(limit = 20, page = 1) {
+    const { data } = await api.listMessagesMessagesGet({ limit, page });
+    return data;
+  },
+};

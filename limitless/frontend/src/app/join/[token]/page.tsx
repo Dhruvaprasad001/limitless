@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { inviteService, type InvitePreview } from "@/services/invite.service";
+import { inviteService } from "@/services/invite.service";
+import type { InvitePreview } from "../../../../client";
 import { ROUTES } from "@/config/routes";
 import { APP_NAME } from "@/config/constants";
 import { cn } from "@/utils/cn";

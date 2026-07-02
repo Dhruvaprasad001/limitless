@@ -1,28 +1,25 @@
 import apiClient from "@/lib/axios";
+import { InvitesApi, Configuration } from "../../client";
+import { env } from "@/config/env";
 
-export interface InviteResponse {
-  token: string;
-  tenant_id: string;
-  created_at: string;
-}
-
-export interface InvitePreview {
-  token: string;
-  tenant_name: string;
-}
+const api = new InvitesApi(
+  new Configuration({ basePath: env.apiBaseUrl }),
+  env.apiBaseUrl,
+  apiClient
+);
 
 export const inviteService = {
-  async create(): Promise<InviteResponse> {
-    const { data } = await apiClient.post<InviteResponse>("/invites/");
+  async create() {
+    const { data } = await api.createInviteInvitesPost({});
     return data;
   },
 
-  async preview(token: string): Promise<InvitePreview> {
-    const { data } = await apiClient.get<InvitePreview>(`/invites/${token}`);
+  async preview(token: string) {
+    const { data } = await api.previewInviteInvitesTokenGet({ token });
     return data;
   },
 
-  async accept(token: string): Promise<void> {
-    await apiClient.post(`/invites/${token}/accept`);
+  async accept(token: string) {
+    await api.acceptInviteInvitesTokenAcceptPost({ token });
   },
 };

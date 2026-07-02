@@ -16,7 +16,7 @@ export default function AskPage() {
   function handleSubmit(q: string) {
     setQuestion(q);
     reset();
-    ask({ question: q });
+    ask(q);
   }
 
   useEffect(() => {
