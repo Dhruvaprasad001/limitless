@@ -1,6 +1,6 @@
 import type { AxiosInstance } from "axios";
 import { API_ENDPOINTS } from "@/config/constants";
-import type { TenantResponse } from "../../../client";
+import type { TenantResponse } from "@client";
 
 export class TenantService {
   constructor(private readonly client: AxiosInstance) {}

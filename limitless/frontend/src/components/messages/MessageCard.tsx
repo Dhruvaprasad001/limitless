@@ -1,4 +1,4 @@
-import type { MessageResponse } from "../../../client";
+import type { MessageResponse } from "@client";
 import { formatRelative, formatDateTime } from "@/utils/date";
 import { initials } from "@/utils/format";
 import { cn } from "@/utils/cn";
