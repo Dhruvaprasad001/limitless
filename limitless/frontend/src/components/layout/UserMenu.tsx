@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/config/routes";
 import { getUserInitials, getUserDisplayName } from "@/helpers/auth.helper";
+import { inviteService } from "@/services/invite.service";
 import { cn } from "@/utils/cn";
 
 export function UserMenu() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [copyLabel, setCopyLabel] = useState("Invite teammates");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +28,19 @@ export function UserMenu() {
   async function handleLogout() {
     await logout();
     router.push(ROUTES.login);
+  }
+
+  async function handleInvite() {
+    try {
+      const invite = await inviteService.create();
+      const url = `${window.location.origin}/join/${invite.token}`;
+      await navigator.clipboard.writeText(url);
+      setCopyLabel("Link copied!");
+      setTimeout(() => setCopyLabel("Invite teammates"), 2500);
+    } catch {
+      setCopyLabel("Failed — try again");
+      setTimeout(() => setCopyLabel("Invite teammates"), 2500);
+    }
   }
 
   const initials = getUserInitials(user);
@@ -67,6 +82,15 @@ export function UserMenu() {
             <p className="truncate text-sm font-medium text-neutral-950">{displayName}</p>
             <p className="truncate text-xs text-neutral-500">{user?.email}</p>
           </div>
+          <button
+            onClick={handleInvite}
+            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+          >
+            <svg className="h-4 w-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            {copyLabel}
+          </button>
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"

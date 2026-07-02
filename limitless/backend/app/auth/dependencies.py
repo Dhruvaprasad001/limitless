@@ -34,6 +34,11 @@ def _set_cached(uid: str, user: CurrentUser) -> None:
     _USER_CACHE[uid] = (user, datetime.utcnow() + _CACHE_TTL)
 
 
+def evict_cached(uid: str) -> None:
+    """Remove a user from the in-process cache (e.g. after tenant reassignment)."""
+    _USER_CACHE.pop(uid, None)
+
+
 async def get_db_session() -> AsyncSession:
     async for session in get_session():
         yield session

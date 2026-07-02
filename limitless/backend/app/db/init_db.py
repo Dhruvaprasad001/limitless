@@ -9,6 +9,7 @@ import app.models.user  # noqa: F401
 import app.models.message  # noqa: F401
 import app.models.message_embedding  # noqa: F401
 import app.models.entity  # noqa: F401
+import app.models.invite  # noqa: F401
 
 
 async def init_db() -> None:

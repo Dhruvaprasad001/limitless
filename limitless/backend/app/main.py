@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import messages, tenants, users
+from app.api import invites, messages, tenants, users
 from app.api import query
 from app.auth.firebase import initialize_firebase_app
 from app.config import settings
@@ -44,6 +44,7 @@ app.add_middleware(
 
 app.include_router(tenants.router)
 app.include_router(users.router)
+app.include_router(invites.router)
 app.include_router(messages.router)
 app.include_router(query.router)
 
