@@ -53,18 +53,9 @@ export function UserMenu() {
         className="flex items-center gap-2 rounded-lg p-1.5 text-sm hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 transition-colors"
         aria-label="User menu"
       >
-        {user?.photoURL ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={user.photoURL}
-            alt={displayName}
-            className="h-8 w-8 rounded-full object-cover ring-1 ring-neutral-200"
-          />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
-            {initials}
-          </div>
-        )}
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
+          {initials}
+        </div>
         <span className="hidden text-neutral-700 sm:block text-sm">{displayName}</span>
         <svg
           className={cn("h-4 w-4 text-neutral-400 transition-transform", open && "rotate-180")}
