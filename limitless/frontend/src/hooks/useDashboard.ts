@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/config/constants";
 import { messageService } from "@/services/message.service";
+import { userService } from "@/services/user.service";
 import { useAuth } from "@/hooks/useAuth";
 
 export function useDashboard() {
@@ -14,15 +15,21 @@ export function useDashboard() {
     enabled: !loading && !!user,
   });
 
+  const usersQuery = useQuery({
+    queryKey: QUERY_KEYS.users,
+    queryFn: () => userService.getUsers(),
+    enabled: !loading && !!user,
+  });
+
   const messages = messagesQuery.data ?? [];
-  const uniqueUsers = new Set(messages.map((m) => m.user_id)).size;
+  const teamMembers = usersQuery.data?.length ?? 0;
 
   return {
     workspaceName: user?.displayName ? `${user.displayName}'s Workspace` : "My Workspace",
     loggedInUser: user?.displayName ?? user?.email ?? "—",
     totalMessages: messages.length,
-    teamMembers: uniqueUsers,
-    isLoading: messagesQuery.isLoading,
-    error: messagesQuery.error,
+    teamMembers,
+    isLoading: messagesQuery.isLoading || usersQuery.isLoading,
+    error: messagesQuery.error ?? usersQuery.error,
   };
 }
