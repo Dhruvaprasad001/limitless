@@ -12,7 +12,7 @@ export function LoadingSkeleton({ className, lines = 3 }: LoadingSkeletonProps) 
         <div
           key={i}
           className={cn(
-            "h-4 animate-pulse rounded-md bg-gray-200",
+            "h-4 animate-pulse rounded-md bg-neutral-100",
             i === lines - 1 ? "w-3/4" : "w-full"
           )}
         />
@@ -23,7 +23,7 @@ export function LoadingSkeleton({ className, lines = 3 }: LoadingSkeletonProps) 
 
 export function CardSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn("rounded-xl border border-gray-200 bg-white p-6", className)}>
+    <div className={cn("rounded-xl border border-neutral-200 bg-white p-6", className)}>
       <LoadingSkeleton lines={4} />
     </div>
   );

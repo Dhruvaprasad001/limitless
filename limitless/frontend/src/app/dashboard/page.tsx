@@ -30,10 +30,10 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Overview</h2>
-          <p className="text-sm text-slate-500">Your workspace at a glance.</p>
+          <h2 className="text-base font-semibold text-neutral-950 tracking-tight">Overview</h2>
+          <p className="mt-0.5 text-sm text-neutral-500">Your workspace at a glance.</p>
         </div>
 
         {/* Stats grid */}
@@ -52,13 +52,15 @@ export default function DashboardPage() {
 
         {/* Quick actions */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-slate-700">Quick Actions</h3>
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+            Quick Actions
+          </h3>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setAddOpen(true)}
               className={cn(
-                "flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm",
-                "hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                "flex items-center gap-2 rounded-lg bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white",
+                "hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2"
               )}
             >
               <Plus className="h-4 w-4" />
@@ -67,8 +69,8 @@ export default function DashboardPage() {
             <button
               onClick={() => router.push(ROUTES.ask)}
               className={cn(
-                "flex items-center gap-2 rounded-lg border border-indigo-200 bg-white px-4 py-2.5 text-sm font-medium text-indigo-700 shadow-sm",
-                "hover:bg-indigo-50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                "flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700",
+                "hover:bg-neutral-50 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2"
               )}
             >
               <Sparkles className="h-4 w-4" />

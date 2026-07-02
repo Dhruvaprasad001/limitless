@@ -23,36 +23,36 @@ export function ExplainabilityPanel({ queryPlan, citedCount }: ExplainabilityPan
   ];
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+    <div className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-neutral-50 transition-colors"
       >
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
           How this answer was generated
         </span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-slate-400 transition-transform",
+            "h-4 w-4 text-neutral-400 transition-transform",
             expanded && "rotate-180"
           )}
         />
       </button>
 
       {expanded && (
-        <div className="border-t border-slate-100 px-4 py-3">
-          <dl className="space-y-2">
+        <div className="border-t border-neutral-100 px-4 py-3">
+          <dl className="space-y-2.5">
             {rows.map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between">
-                <dt className="text-xs text-slate-500">{label}</dt>
+                <dt className="text-xs text-neutral-500">{label}</dt>
                 <dd
                   className={cn(
                     "text-xs font-medium",
-                    value === "Yes" || value === "High confidence"
-                      ? "text-green-700"
-                      : value === "No" || value === "none" || value === "Low confidence"
-                      ? "text-slate-500"
-                      : "text-slate-800"
+                    value === "Yes"
+                      ? "text-neutral-950"
+                      : value === "No" || value === "none"
+                      ? "text-neutral-400"
+                      : "text-neutral-700"
                   )}
                 >
                   {value}

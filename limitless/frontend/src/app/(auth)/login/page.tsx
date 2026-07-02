@@ -28,60 +28,54 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4">
-      <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-slate-200 bg-white p-10 shadow-xl">
-          {/* Branding */}
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-600 text-2xl font-bold text-white shadow-md">
-              L
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{APP_NAME}</h1>
-            <p className="mt-1 text-sm text-slate-500">
-              AI-powered team updates for modern teams
-            </p>
+    <main className="flex min-h-screen items-center justify-center bg-white p-4">
+      <div className="w-full max-w-sm">
+        {/* Branding */}
+        <div className="mb-10 text-center">
+          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-950 text-white text-lg font-bold">
+            L
           </div>
-
-          {/* Divider */}
-          <div className="mb-6 border-t border-slate-100" />
-
-          {/* Sign in section */}
-          <div className="space-y-4">
-            <p className="text-center text-sm font-medium text-slate-700">
-              Sign in to your workspace
-            </p>
-
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className={cn(
-                "flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3",
-                "text-sm font-medium text-slate-700 shadow-sm transition-all",
-                "hover:bg-slate-50 hover:border-slate-400 hover:shadow",
-                "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
-                "disabled:cursor-not-allowed disabled:opacity-60"
-              )}
-            >
-              {loading ? (
-                <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600" />
-              ) : (
-                <GoogleIcon />
-              )}
-              {loading ? "Signing in…" : "Continue with Google"}
-            </button>
-
-            {error && (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-center text-xs text-red-600">
-                {error}
-              </p>
-            )}
-          </div>
-
-          {/* Footer */}
-          <p className="mt-8 text-center text-xs text-slate-400">
-            By signing in, you agree to our Terms of Service and Privacy Policy.
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-950">{APP_NAME}</h1>
+          <p className="mt-1.5 text-sm text-neutral-500">
+            AI-powered team updates for modern teams
           </p>
         </div>
+
+        {/* Card */}
+        <div className="rounded-2xl border border-neutral-200 bg-white p-8">
+          <p className="mb-5 text-center text-sm font-medium text-neutral-700">
+            Sign in to your workspace
+          </p>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className={cn(
+              "flex w-full items-center justify-center gap-3 rounded-lg border border-neutral-300 bg-white px-4 py-3",
+              "text-sm font-medium text-neutral-800 transition-all",
+              "hover:bg-neutral-50 hover:border-neutral-400",
+              "focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2",
+              "disabled:cursor-not-allowed disabled:opacity-50"
+            )}
+          >
+            {loading ? (
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-950" />
+            ) : (
+              <GoogleIcon />
+            )}
+            {loading ? "Signing in…" : "Continue with Google"}
+          </button>
+
+          {error && (
+            <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-center text-xs text-red-700">
+              {error}
+            </p>
+          )}
+        </div>
+
+        <p className="mt-6 text-center text-xs text-neutral-400">
+          By signing in, you agree to our Terms of Service and Privacy Policy.
+        </p>
       </div>
     </main>
   );

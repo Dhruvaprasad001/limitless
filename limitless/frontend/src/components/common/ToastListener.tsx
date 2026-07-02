@@ -21,7 +21,7 @@ export function ToastListener() {
   return (
     <div
       className={cn(
-        "fixed bottom-4 right-4 z-50 rounded-lg bg-red-600 px-4 py-3 text-sm text-white shadow-lg",
+        "fixed bottom-4 right-4 z-50 rounded-lg border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-lg",
         "animate-in fade-in slide-in-from-bottom-4"
       )}
     >

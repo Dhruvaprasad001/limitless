@@ -6,11 +6,12 @@ import { messageService } from "@/services/message.service";
 import { useAuth } from "@/hooks/useAuth";
 
 export function useDashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const messagesQuery = useQuery({
     queryKey: QUERY_KEYS.dashboard,
     queryFn: () => messageService.getMessages(),
+    enabled: !loading && !!user,
   });
 
   const messages = messagesQuery.data ?? [];

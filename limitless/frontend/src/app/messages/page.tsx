@@ -16,11 +16,13 @@ export default function MessagesPage() {
 
   return (
     <AppShell>
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Team Updates</h2>
-            <p className="text-sm text-slate-500">
+            <h2 className="text-base font-semibold text-neutral-950 tracking-tight">
+              Team Updates
+            </h2>
+            <p className="mt-0.5 text-sm text-neutral-500">
               {messages ? `${messages.length} message${messages.length !== 1 ? "s" : ""}` : ""}
             </p>
           </div>
@@ -29,7 +31,7 @@ export default function MessagesPage() {
         {isLoading && (
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+              <div key={i} className="rounded-xl border border-neutral-200 bg-white p-4">
                 <LoadingSkeleton lines={3} />
               </div>
             ))}
@@ -37,7 +39,7 @@ export default function MessagesPage() {
         )}
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             Failed to load messages. Please refresh.
           </p>
         )}
@@ -50,7 +52,7 @@ export default function MessagesPage() {
             action={
               <button
                 onClick={() => setAddOpen(true)}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                className="rounded-lg bg-neutral-950 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
               >
                 Add Update
               </button>
@@ -73,8 +75,8 @@ export default function MessagesPage() {
         aria-label="Add update"
         className={cn(
           "fixed bottom-8 right-8 flex h-12 w-12 items-center justify-center rounded-full",
-          "bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 transition-colors",
-          "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          "bg-neutral-950 text-white shadow-lg hover:bg-neutral-800 transition-colors",
+          "focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2"
         )}
       >
         <Plus className="h-5 w-5" />

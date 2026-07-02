@@ -3,12 +3,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/config/constants";
 import { messageService } from "@/services/message.service";
+import { useAuth } from "@/hooks/useAuth";
 import type { MessageCreate, MessageResponse } from "@/types/message";
 
 export function useMessages() {
+  const { user, loading } = useAuth();
   return useQuery({
     queryKey: QUERY_KEYS.messages,
     queryFn: () => messageService.getMessages(),
+    enabled: !loading && !!user,
   });
 }
 

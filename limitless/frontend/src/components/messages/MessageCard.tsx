@@ -14,30 +14,30 @@ export function MessageCard({ message, className }: MessageCardProps) {
   return (
     <div
       className={cn(
-        "flex gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-opacity",
-        isOptimistic && "opacity-60",
+        "flex gap-3 rounded-xl border border-neutral-200 bg-white p-4 transition-opacity",
+        isOptimistic && "opacity-50",
         className
       )}
     >
-      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
         {initials(message.user_id.slice(0, 8))}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-xs font-medium text-slate-500">
+          <p className="truncate text-xs font-medium text-neutral-500">
             {message.user_id.slice(0, 8)}…
           </p>
           <time
-            className="flex-shrink-0 text-xs text-slate-400"
+            className="shrink-0 text-xs text-neutral-400"
             dateTime={message.event_time}
             title={formatDateTime(message.event_time)}
           >
             {formatRelative(message.event_time)}
           </time>
         </div>
-        <p className="mt-1 text-sm leading-relaxed text-slate-800">{message.content}</p>
+        <p className="mt-1 text-sm leading-relaxed text-neutral-800">{message.content}</p>
         {isOptimistic && (
-          <p className="mt-1 text-xs text-slate-400">Sending…</p>
+          <p className="mt-1 text-xs text-neutral-400">Sending…</p>
         )}
       </div>
     </div>

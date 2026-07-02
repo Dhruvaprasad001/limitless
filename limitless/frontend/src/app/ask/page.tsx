@@ -23,8 +23,8 @@ export default function AskPage() {
     <AppShell>
       <div className="mx-auto max-w-2xl space-y-6">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Ask AI</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-base font-semibold text-neutral-950 tracking-tight">Ask AI</h2>
+          <p className="mt-0.5 text-sm text-neutral-500">
             Ask questions about your team&apos;s updates. Answers are grounded in real messages.
           </p>
         </div>
@@ -32,22 +32,20 @@ export default function AskPage() {
         <AskInput onSubmit={handleSubmit} isLoading={isLoading} />
 
         {question && (
-          <div className="rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            <span className="font-medium">You asked: </span>
+          <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+            <span className="font-medium text-neutral-950">You asked: </span>
             {question}
           </div>
         )}
 
         {isLoading && (
-          <div className="space-y-4">
-            <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-5">
-              <LoadingSkeleton lines={4} />
-            </div>
+          <div className="rounded-xl border border-neutral-200 bg-white p-5">
+            <LoadingSkeleton lines={4} />
           </div>
         )}
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error.message ?? "Failed to get an answer. Please try again."}
           </p>
         )}
@@ -58,7 +56,7 @@ export default function AskPage() {
 
             {result.supporting_message_ids.length > 0 && (
               <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-neutral-400">
                   Supporting Evidence ({result.supporting_message_ids.length})
                 </p>
                 <div className="space-y-2">
